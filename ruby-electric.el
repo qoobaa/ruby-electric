@@ -122,7 +122,13 @@ strings. Note that you must have Font Lock enabled."
   (define-key ruby-mode-map "|" 'ruby-electric-bar)
   (define-key ruby-mode-map (kbd "RET") 'ruby-electric-return)
   (define-key ruby-mode-map (kbd "C-j") 'ruby-electric-return)
-  (define-key ruby-mode-map (kbd "C-m") 'ruby-electric-return))
+  (define-key ruby-mode-map (kbd "C-m") 'ruby-electric-return)
+  (define-key ruby-mode-map "}" 'ruby-electric-close-curlies)
+  (define-key ruby-mode-map ")" 'ruby-electric-close-matching-char)
+  (define-key ruby-mode-map "]" 'ruby-electric-close-matching-char)
+  (define-key ruby-mode-map "\"" 'ruby-electric-close-matching-char)
+  (define-key ruby-mode-map "\'" 'ruby-electric-close-matching-char)
+  (define-key ruby-mode-map "|" 'ruby-electric-close-bar))
 
 (defun ruby-electric-space (arg)
   (interactive "P")
@@ -180,6 +186,12 @@ strings. Note that you must have Font Lock enabled."
                  (forward-char 1)
                  (insert "}")))))))
 
+(defun ruby-electric-close-curlies(arg)
+  (interactive "P")
+  (if (looking-at "}")
+      (forward-char 1)
+    (self-insert-command (prefix-numeric-value arg))))
+
 (defun ruby-electric-matching-char(arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
@@ -188,6 +200,12 @@ strings. Note that you must have Font Lock enabled."
        (save-excursion
          (insert (cdr (assoc last-command-char
                              ruby-electric-matching-delimeter-alist))))))
+
+(defun ruby-electric-close-matching-char(arg)
+  (interactive "P")
+  (if (looking-at (string last-command-char))
+      (forward-char 1)
+    (self-insert-command (prefix-numeric-value arg))))
 
 (defun ruby-electric-bar(arg)
   (interactive "P")
@@ -214,5 +232,11 @@ strings. Note that you must have Font Lock enabled."
         (newline)
         (ruby-insert-end)))
   (reindent-then-newline-and-indent))
+
+(defun ruby-electric-close-bar(arg)
+  (interactive "P")
+  (if (looking-at (string last-command-char))
+      (forward-char 1)
+    (self-insert-command (prefix-numeric-value arg))))
 
 (provide 'ruby-electric)
