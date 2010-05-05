@@ -119,7 +119,10 @@ strings. Note that you must have Font Lock enabled."
   (define-key ruby-mode-map "[" 'ruby-electric-matching-char)
   (define-key ruby-mode-map "\"" 'ruby-electric-matching-char)
   (define-key ruby-mode-map "\'" 'ruby-electric-matching-char)
-  (define-key ruby-mode-map "|" 'ruby-electric-bar))
+  (define-key ruby-mode-map "|" 'ruby-electric-bar)
+  (define-key ruby-mode-map (kbd "RET") 'ruby-electric-return)
+  (define-key ruby-mode-map (kbd "C-j") 'ruby-electric-return)
+  (define-key ruby-mode-map (kbd "C-m") 'ruby-electric-return))
 
 (defun ruby-electric-space (arg)
   (interactive "P")
@@ -196,5 +199,20 @@ strings. Note that you must have Font Lock enabled."
        (save-excursion
          (insert "|"))))
 
+(defun ruby-electric-return-can-be-expanded-p()
+  (if (ruby-electric-code-at-point-p)
+      (let* ((ruby-electric-keywords-re
+              (concat ruby-electric-simple-keywords-re "$")))
+        (save-excursion
+          (ruby-backward-sexp 1)
+          (looking-at ruby-electric-keywords-re)))))
+
+(defun ruby-electric-return ()
+  (interactive "*")
+  (if (ruby-electric-return-can-be-expanded-p)
+      (save-excursion
+        (newline)
+        (ruby-insert-end)))
+  (reindent-then-newline-and-indent))
 
 (provide 'ruby-electric)
