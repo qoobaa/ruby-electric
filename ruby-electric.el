@@ -151,7 +151,7 @@ strings. Note that you must have Font Lock enabled."
              (ruby-electric-single-keyword-in-line-re
               (concat "\\s-*" ruby-electric-keywords-re)))
         (save-excursion
-          (backward-word 1)
+          (ruby-backward-sexp 1)
           (or (looking-at ruby-electric-expandable-do-re)
               (and (looking-at ruby-electric-keywords-re)
                    (not (string= "do" (match-string 1)))
