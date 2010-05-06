@@ -58,7 +58,7 @@
   "do\\s-$")
 
 (defconst ruby-electric-expandable-bar
-  "\\s-\\(do\\|{\\)\\s-+|")
+  "\\s-\\(do\\s-+\\|{\\s-*\\)|")
 
 (defvar ruby-electric-matching-delimeter-alist
   '((?\[ . ?\])
@@ -171,7 +171,6 @@ strings. Note that you must have Font Lock enabled."
   (self-insert-command (prefix-numeric-value arg))
   (if (ruby-electric-is-last-command-char-expandable-punct-p)
       (cond ((ruby-electric-code-at-point-p)
-             (insert " ")
              (save-excursion
                (if ruby-electric-newline-before-closing-bracket
                    (newline))
