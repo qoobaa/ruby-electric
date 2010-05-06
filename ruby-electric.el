@@ -1,52 +1,14 @@
-;; -*-Emacs-Lisp-*-
-;;
 ;; ruby-electric.el --- electric editing commands for ruby files
 ;;
-;; Copyright (C) 2005 by Dee Zsombor <dee dot zsombor at gmail dot com>.
-;; Released under same license terms as Ruby.
+;; Copyright (C) 2005 by Dee Zsombor
 ;;
-;; Due credit: this work was inspired by a code snippet posted by
-;; Frederick Ros at http://rubygarden.org/ruby?EmacsExtensions.
-;;
-;; Following improvements where added:
-;;
-;;       - handling of strings of type 'here document'
-;;       - more keywords, with special handling for 'do'
-;;       - packaged into a minor mode
-;;
-;; Usage:
-;;
-;;    0) copy ruby-electric.el into directory where emacs can find it.
-;;
-;;    1) modify your startup file (.emacs or whatever) by adding
-;;       following line:
-;;
-;;            (require 'ruby-electric)
-;;
-;;       note that you need to have font lock enabled beforehand.
-;;
-;;    2) toggle Ruby Electric Mode on/off with ruby-electric-mode.
-;;
-;; Changelog:
-;;
-;;  2005/Jan/14: inserts matching pair delimiters like {, [, (, ', ",
-;;  ' and | .
-;;
-;;  2005/Jan/14: added basic Custom support for configuring keywords
-;;  with electric closing.
-;;
-;;  2005/Jan/18: more Custom support for configuring characters for
-;;  which matching expansion should occur.
-;;
-;;  2005/Jan/18: no longer uses 'looking-back' or regexp character
-;;  classes like [:space:] since they are not implemented on XEmacs.
-;;
-;;  2005/Feb/01: explicitly provide default argument of 1 to
-;;  'backward-word' as it requires it on Emacs 21.3
-;;
-;;  2005/Mar/06: now stored inside ruby CVS; customize pages now have
-;;  ruby as parent; cosmetic fixes.
+;; Authors: Dee Zsombor <dee dot zsombor at gmail dot com>
+;; Maintainer: Jakub Kuźma <qoobaa@gmail.com>
+;; URL: http://github.com/qoobaa/ruby-electric/raw/master/ruby-electric.el
+;; Keywords: languages ruby
+;; Version: 1.1
 
+;;; Code:
 
 (require 'ruby-mode)
 
@@ -92,6 +54,7 @@ inserted. The word 'all' will do all insertions."
 closing bracket or not."
   :type 'boolean :group 'ruby-electric)
 
+;;;###autoload
 (define-minor-mode ruby-electric-mode
   "Toggle Ruby Electric minor mode.
 With no argument, this command toggles the mode.  Non-null prefix
@@ -229,4 +192,13 @@ strings. Note that you must have Font Lock enabled."
         (ruby-insert-end)))
   (reindent-then-newline-and-indent))
 
+;; FIXME: it should be available in next versions of ruby-mode.el
+(defun ruby-insert-end ()
+  (interactive)
+  (insert "end")
+  (ruby-indent-line t)
+  (end-of-line))
+
 (provide 'ruby-electric)
+
+;;; ruby-electric.el ends here
