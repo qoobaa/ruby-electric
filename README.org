@@ -3,7 +3,7 @@
 Due credit: this work was inspired by a code snippet posted by
 Frederick Ros at http://rubygarden.org/ruby?EmacsExtensions.
 
-* Following improvements where added:
+* Following improvements were added:
 
 - handling of strings of type 'here document'
 - more keywords, with special handling for 'do'
