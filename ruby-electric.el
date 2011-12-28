@@ -97,7 +97,7 @@ strings. Note that you must have Font Lock enabled."
       (save-excursion
         (ruby-indent-line t)
         (newline)
-        (ruby-insert-end))))
+        (ruby-electric-insert-end))))
 
 (defun ruby-electric-code-at-point-p ()
   (and ruby-electric-mode
@@ -189,11 +189,10 @@ strings. Note that you must have Font Lock enabled."
   (if (ruby-electric-return-can-be-expanded-p)
       (save-excursion
         (newline)
-        (ruby-insert-end)))
+        (ruby-electric-insert-end)))
   (reindent-then-newline-and-indent))
 
-;; FIXME: it should be available in next versions of ruby-mode.el
-(defun ruby-insert-end ()
+(defun ruby-electric-insert-end ()
   (interactive)
   (insert "end")
   (ruby-indent-line t)
