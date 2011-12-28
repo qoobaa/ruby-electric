@@ -75,7 +75,7 @@ strings. Note that you must have Font Lock enabled."
   ruby-mode-map
   (ruby-electric-setup-keymap))
 
-(defun ruby-electric-setup-keymap()
+(defun ruby-electric-setup-keymap ()
   (define-key ruby-mode-map " " 'ruby-electric-space)
   (define-key ruby-mode-map "{" 'ruby-electric-curlies)
   (define-key ruby-mode-map "(" 'ruby-electric-matching-char)
@@ -99,21 +99,21 @@ strings. Note that you must have Font Lock enabled."
         (newline)
         (ruby-insert-end))))
 
-(defun ruby-electric-code-at-point-p()
+(defun ruby-electric-code-at-point-p ()
   (and ruby-electric-mode
        (let* ((properties (text-properties-at (point))))
          (and (null (memq 'font-lock-string-face properties))
               (null (memq 'font-lock-comment-face properties))))))
 
-(defun ruby-electric-string-at-point-p()
+(defun ruby-electric-string-at-point-p ()
   (and ruby-electric-mode
        (consp (memq 'font-lock-string-face (text-properties-at (point))))))
 
-(defun ruby-electric-is-last-command-char-expandable-punct-p()
+(defun ruby-electric-is-last-command-char-expandable-punct-p ()
   (or (memq 'all ruby-electric-expand-delimiters-list)
       (memq last-command-event ruby-electric-expand-delimiters-list)))
 
-(defun ruby-electric-space-can-be-expanded-p()
+(defun ruby-electric-space-can-be-expanded-p ()
   (if (ruby-electric-code-at-point-p)
       (let* ((ruby-electric-keywords-re
               (concat ruby-electric-simple-keywords-re "\\s-$"))
@@ -129,7 +129,7 @@ strings. Note that you must have Font Lock enabled."
                      (looking-at ruby-electric-single-keyword-in-line-re))))))))
 
 
-(defun ruby-electric-curlies(arg)
+(defun ruby-electric-curlies (arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
   (if (ruby-electric-is-last-command-char-expandable-punct-p)
@@ -145,13 +145,13 @@ strings. Note that you must have Font Lock enabled."
                  (forward-char 1)
                  (insert "}")))))))
 
-(defun ruby-electric-close-curlies(arg)
+(defun ruby-electric-close-curlies (arg)
   (interactive "P")
   (if (looking-at "}")
       (forward-char 1)
     (self-insert-command (prefix-numeric-value arg))))
 
-(defun ruby-electric-matching-char(arg)
+(defun ruby-electric-matching-char (arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
   (and (ruby-electric-is-last-command-char-expandable-punct-p)
@@ -160,13 +160,13 @@ strings. Note that you must have Font Lock enabled."
          (insert (cdr (assoc last-command-event
                              ruby-electric-matching-delimeter-alist))))))
 
-(defun ruby-electric-close-matching-char(arg)
+(defun ruby-electric-close-matching-char (arg)
   (interactive "P")
   (if (looking-at (string last-command-event))
       (forward-char 1)
     (self-insert-command (prefix-numeric-value arg))))
 
-(defun ruby-electric-bar(arg)
+(defun ruby-electric-bar (arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
   (and (ruby-electric-is-last-command-char-expandable-punct-p)
@@ -176,12 +176,12 @@ strings. Note that you must have Font Lock enabled."
        (save-excursion
          (insert "|"))))
 
-(defun ruby-electric-return-can-be-expanded-p()
+(defun ruby-electric-return-can-be-expanded-p ()
   (if (ruby-electric-code-at-point-p)
       (let* ((ruby-electric-keywords-re
               (concat ruby-electric-simple-keywords-re "$")))
         (save-excursion
-          (ruby-backward-sexp 1)
+          (skip-chars-backward "A-Za-z0-9_:")
           (looking-at ruby-electric-keywords-re)))))
 
 (defun ruby-electric-return ()
