@@ -201,9 +201,7 @@ strings. Note that you must have Font Lock enabled."
 ;; Makes sure that ruby buffers are given the ruby-electric minor mode by default
 ;;;###autoload
 (eval-after-load 'ruby-mode
-  '(add-hook 'ruby-mode-hook
-             (lambda ()
-               (ruby-electric-mode))))
+  '(add-hook 'ruby-mode-hook 'ruby-electric-mode))
 
 (provide 'ruby-electric)
 
