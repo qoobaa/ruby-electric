@@ -128,8 +128,7 @@ strings. Note that you must have Font Lock enabled."
                      (beginning-of-line)
                      (looking-at ruby-electric-single-keyword-in-line-re))))))))
 
-
-(defun ruby-electric-curlies (arg)
+(defun ruby-electric-curlies(arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
   (if (ruby-electric-is-last-command-char-expandable-punct-p)
@@ -142,11 +141,13 @@ strings. Note that you must have Font Lock enabled."
                      (ruby-indent-line t))
                  (insert "}"))))
             ((ruby-electric-string-at-point-p)
-             (save-excursion
-               (backward-char 1)
-               (when (char-equal ?\# (preceding-char))
-                 (forward-char 1)
-                 (insert "}")))))))
+             (if (eq last-command-event ?{)
+                 (save-excursion
+                   (backward-char 1)
+                   (or (char-equal ?\# (preceding-char))
+                       (insert "#"))
+                   (forward-char 1)
+                   (insert "}")))))))
 
 (defun ruby-electric-close-curlies (arg)
   (interactive "P")
@@ -156,12 +157,15 @@ strings. Note that you must have Font Lock enabled."
 
 (defun ruby-electric-matching-char (arg)
   (interactive "P")
-  (self-insert-command (prefix-numeric-value arg))
-  (and (ruby-electric-is-last-command-char-expandable-punct-p)
-       (ruby-electric-code-at-point-p)
-       (save-excursion
-         (insert (cdr (assoc last-command-event
-                             ruby-electric-matching-delimeter-alist))))))
+  (if (looking-at (string last-command-event))
+      (forward-char 1)
+    (progn
+      (self-insert-command (prefix-numeric-value arg))
+      (and (ruby-electric-is-last-command-char-expandable-punct-p)
+           (ruby-electric-code-at-point-p)
+           (save-excursion
+             (insert (cdr (assoc last-command-event
+                                 ruby-electric-matching-delimeter-alist))))))))
 
 (defun ruby-electric-close-matching-char (arg)
   (interactive "P")
@@ -171,13 +175,16 @@ strings. Note that you must have Font Lock enabled."
 
 (defun ruby-electric-bar (arg)
   (interactive "P")
-  (self-insert-command (prefix-numeric-value arg))
-  (and (ruby-electric-is-last-command-char-expandable-punct-p)
-       (ruby-electric-code-at-point-p)
-       (and (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
-            (= (point) (match-end 0))) ;looking-back is missing on XEmacs
-       (save-excursion
-         (insert "|"))))
+  (if (looking-at (string last-command-event))
+      (forward-char 1)
+    (progn
+      (self-insert-command (prefix-numeric-value arg))
+      (and (ruby-electric-is-last-command-char-expandable-punct-p)
+           (ruby-electric-code-at-point-p)
+           (and (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
+                (= (point) (match-end 0))) ;looking-back is missing on XEmacs
+           (save-excursion
+             (insert "|"))))))
 
 (defun ruby-electric-return-can-be-expanded-p ()
   (if (ruby-electric-code-at-point-p)
