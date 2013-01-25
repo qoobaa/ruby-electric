@@ -136,8 +136,11 @@ strings. Note that you must have Font Lock enabled."
       (cond ((ruby-electric-code-at-point-p)
              (save-excursion
                (if ruby-electric-newline-before-closing-bracket
-                   (newline))
-               (insert "}")))
+                   (progn
+                     (newline)
+                     (insert "}")
+                     (ruby-indent-line t))
+                 (insert "}"))))
             ((ruby-electric-string-at-point-p)
              (save-excursion
                (backward-char 1)
