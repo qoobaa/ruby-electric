@@ -1,4 +1,4 @@
-;;; ruby-electric.el --- electric editing commands for ruby files
+;;; ruby-electric.el --- Minor mode with electric editing commands for Ruby files
 ;;
 ;; Copyright (C) 2005 by Dee Zsombor
 ;;
