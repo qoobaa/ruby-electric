@@ -15,8 +15,9 @@ Improvements
 Usage
 -----
 
-1. [Add MELPA](http://melpa.milkbox.net/#installing) repository to your package archives and install `ruby-electric` package.
-2. Toggle Ruby Electric Mode on/off with `ruby-electric-mode`.
+1. [Add MELPA](http://melpa.milkbox.net/#installing) repository to your package archives.
+2. Install package `ruby-electric` using `M-x package-install`.
+3. Toggle Ruby Electric Mode on with `ruby-electric-mode`.
 
 Credits
 -------
