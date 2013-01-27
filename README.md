@@ -1,7 +1,7 @@
 ruby-electric.el
 ================
 
-Ruby electric minor mode makes writing and editing Ruby code easier.
+Ruby Electric Mode is a minor mode that makes writing and editing Ruby code easier.
 
 Improvements
 ============
@@ -10,12 +10,12 @@ Improvements
 * more keywords, with special handling for `do`
 * packaged into a minor mode
 * inserting matching pair delimiters like `{`, `[`, `(`, `'`, `"`, `'` and `|`
-* added basic Custom support for configuring keywords with electric closing and characters for which matching expansion should occur
+* added basic custom support for configuring keywords with electric closing and characters for which matching expansion should occur
 
 Usage
 =====
 
-1. [Add MELPA](http://melpa.milkbox.net/#installing) repository to your package archives and install ruby-electric package.
+1. [Add MELPA](http://melpa.milkbox.net/#installing) repository to your package archives and install `ruby-electric` package.
 2. Toggle Ruby Electric Mode on/off with `ruby-electric-mode`.
 
 Credits
