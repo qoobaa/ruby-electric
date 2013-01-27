@@ -21,9 +21,7 @@ Usage
 Credits
 -------
 
-
-This work was inspired by a code snippet posted by Frederick Ros at
-http://rubygarden.org/ruby?EmacsExtensions.
+This work was inspired by a code snippet posted by Frederick Ros.
 
 License
 -------
