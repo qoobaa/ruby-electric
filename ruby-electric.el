@@ -20,7 +20,7 @@
   "do\\s-$")
 
 (defconst ruby-electric-expandable-bar
-  "\\s-\\(do\\s-+\\|{\\s-*\\)|[^|\n]*")
+  "\\s-\\(do\\s-+\\|{\\s-*\\)")
 
 (defvar ruby-electric-matching-delimeter-alist
   '((?\[ . ?\])
@@ -149,12 +149,6 @@ strings. Note that you must have Font Lock enabled."
                    (forward-char 1)
                    (insert "}")))))))
 
-(defun ruby-electric-close-curlies (arg)
-  (interactive "P")
-  (if (looking-at "}")
-      (forward-char 1)
-    (self-insert-command (prefix-numeric-value arg))))
-
 (defun ruby-electric-quote (arg)
   (interactive "P")
   (if (ruby-electric-is-last-command-char-expandable-punct-p)
@@ -180,7 +174,7 @@ strings. Note that you must have Font Lock enabled."
 
 (defun ruby-electric-matching-char (arg)
   (interactive "P")
-  (if (looking-at (string last-command-event))
+  (if (looking-at (regexp-quote (string last-command-event)))
       (forward-char 1)
     (progn
       (self-insert-command (prefix-numeric-value arg))
@@ -192,28 +186,23 @@ strings. Note that you must have Font Lock enabled."
 
 (defun ruby-electric-close-matching-char (arg)
   (interactive "P")
-  (if (looking-at (string last-command-event))
+  (if (looking-at (regexp-quote (string last-command-event)))
       (forward-char 1)
     (self-insert-command (prefix-numeric-value arg))))
 
 (defun ruby-electric-bar (arg)
   (interactive "P")
-  ;; if electric mode
-  (if (ruby-electric-is-last-command-char-expandable-punct-p)
-      ;; if inside | |
-      (if (and (ruby-electric-code-at-point-p)
-	       (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
-	       (= (point) (match-end 0)))
-	  ;; if at end of | |
-	  (if (looking-at (string last-command-event))
-	      (forward-char 1)	     ;just hop over closing |
-	    ;; else inside | | but not at the end, just self-insert
-	    (self-insert-command (prefix-numeric-value arg)))
-	;; else not inside | |, self-insert plus closing
-	(self-insert-command (prefix-numeric-value arg))
-	(save-excursion
-	  (insert "|")))
-    ;; else electric mode off, just self-insert
+  (if (and (ruby-electric-is-last-command-char-expandable-punct-p)
+           (ruby-electric-code-at-point-p))
+      (if (and (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
+               (= (point) (match-end 0)))
+          ;; expand bar after ' do ' or ' { '
+          (progn
+            (self-insert-command (prefix-numeric-value arg))
+            (save-excursion
+              (insert "|")))
+        ;; behave like on closing ')'
+        (ruby-electric-close-matching-char arg))
     (self-insert-command (prefix-numeric-value arg))))
 
 (defun ruby-electric-return-can-be-expanded-p ()
