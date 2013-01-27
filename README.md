@@ -1,7 +1,7 @@
-ruby-electric.el
-================
+Ruby Electric
+=============
 
-Ruby Electric Mode is a minor mode that makes writing and editing Ruby code easier.
+Ruby Electric is a minor mode that makes writing and editing Ruby code easier.
 
 Improvements
 ------------
@@ -17,7 +17,7 @@ Usage
 
 1. [Add MELPA](http://melpa.milkbox.net/#installing) repository to your package archives.
 2. Install package `ruby-electric` using `M-x package-install`.
-3. Toggle Ruby Electric Mode on using `M-x ruby-electric-mode`.
+3. Toggle Ruby Electric on using `M-x ruby-electric-mode`.
 
 Credits
 -------
