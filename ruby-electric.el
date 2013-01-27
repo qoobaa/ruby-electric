@@ -155,7 +155,7 @@ strings. Note that you must have Font Lock enabled."
   (interactive "P")
   (if (ruby-electric-is-last-command-char-expandable-punct-p)
       ;; if outside quotes, do the self-insert as before
-      (if (null (memq 'font-lock-string-face (text-properties-at (point))))
+      (if (ruby-electric-code-at-point-p)
 	  (progn
 	    (self-insert-command (prefix-numeric-value arg))
 	    (save-excursion
