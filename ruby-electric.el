@@ -20,7 +20,7 @@
   "do\\s-$")
 
 (defconst ruby-electric-expandable-bar
-  "\\s-\\(do\\s-+\\|{\\s-*\\)|")
+  "\\s-\\(do\\s-+\\|{\\s-*\\)|[^|\n]*")
 
 (defvar ruby-electric-matching-delimeter-alist
   '((?\[ . ?\])
@@ -80,8 +80,8 @@ strings. Note that you must have Font Lock enabled."
   (define-key ruby-mode-map "{" 'ruby-electric-curlies)
   (define-key ruby-mode-map "(" 'ruby-electric-matching-char)
   (define-key ruby-mode-map "[" 'ruby-electric-matching-char)
-  (define-key ruby-mode-map "\"" 'ruby-electric-matching-char)
-  (define-key ruby-mode-map "\'" 'ruby-electric-matching-char)
+  (define-key ruby-mode-map "\"" 'ruby-electric-quote)
+  (define-key ruby-mode-map "\'" 'ruby-electric-quote)
   (define-key ruby-mode-map "|" 'ruby-electric-bar)
   (define-key ruby-mode-map (kbd "RET") 'ruby-electric-return)
   (define-key ruby-mode-map (kbd "C-j") 'ruby-electric-return)
@@ -151,6 +151,24 @@ strings. Note that you must have Font Lock enabled."
       (forward-char 1)
     (self-insert-command (prefix-numeric-value arg))))
 
+(defun ruby-electric-quote (arg)
+  (interactive "P")
+  (if (ruby-electric-is-last-command-char-expandable-punct-p)
+      ;; if outside quotes, do the self-insert as before
+      (if (null (memq 'font-lock-string-face (text-properties-at (point))))
+	  (progn
+	    (self-insert-command (prefix-numeric-value arg))
+	    (save-excursion
+	      (insert (cdr (assoc last-command-event
+				  ruby-electric-matching-delimeter-alist)))))
+	;; else, inside quote so see if we need to just hop over the closing quote
+	(if (looking-at (string last-command-event))
+	    (forward-char 1)
+	  ;; else inside quote but not at the end.
+	  (self-insert-command (prefix-numeric-value arg))))
+    ;; else electric mode is off, just do self-insert
+    (self-insert-command (prefix-numeric-value arg))))
+
 (defun ruby-electric-matching-char (arg)
   (interactive "P")
   (self-insert-command (prefix-numeric-value arg))
@@ -168,13 +186,23 @@ strings. Note that you must have Font Lock enabled."
 
 (defun ruby-electric-bar (arg)
   (interactive "P")
-  (self-insert-command (prefix-numeric-value arg))
-  (and (ruby-electric-is-last-command-char-expandable-punct-p)
-       (ruby-electric-code-at-point-p)
-       (and (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
-            (= (point) (match-end 0))) ;looking-back is missing on XEmacs
-       (save-excursion
-         (insert "|"))))
+  ;; if electric mode
+  (if (ruby-electric-is-last-command-char-expandable-punct-p)
+      ;; if inside | |
+      (if (and (ruby-electric-code-at-point-p)
+	       (save-excursion (re-search-backward ruby-electric-expandable-bar nil t))
+	       (= (point) (match-end 0)))
+	  ;; if at end of | |
+	  (if (looking-at (string last-command-event))
+	      (forward-char 1)	     ;just hop over closing |
+	    ;; else inside | | but not at the end, just self-insert
+	    (self-insert-command (prefix-numeric-value arg)))
+	;; else not inside | |, self-insert plus closing
+	(self-insert-command (prefix-numeric-value arg))
+	(save-excursion
+	  (insert "|")))
+    ;; else electric mode off, just self-insert
+    (self-insert-command (prefix-numeric-value arg))))
 
 (defun ruby-electric-return-can-be-expanded-p ()
   (if (ruby-electric-code-at-point-p)
