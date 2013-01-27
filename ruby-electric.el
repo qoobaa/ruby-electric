@@ -165,8 +165,13 @@ strings. Note that you must have Font Lock enabled."
 	    (save-excursion
 	      (insert (cdr (assoc last-command-event
 				  ruby-electric-matching-delimeter-alist)))))
-	;; else, inside quote so see if we need to just hop over the closing quote
-	(if (looking-at (string last-command-event))
+	;; else, inside quote so see if we need to just hop over the
+	;; closing quote
+	(if (and
+             (looking-at (string last-command-event))
+             ;; allow escaping - don't hop over the quote if the
+             ;; previous char is a backslash
+             (not (char-equal ?\\ (preceding-char))))
 	    (forward-char 1)
 	  ;; else inside quote but not at the end.
 	  (self-insert-command (prefix-numeric-value arg))))
