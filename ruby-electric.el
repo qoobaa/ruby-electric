@@ -20,7 +20,7 @@
   "do\\s-$")
 
 (defconst ruby-electric-expandable-bar
-  "\\s-\\(do\\s-+\\|{\\s-*\\)")
+  "\\(\\s-do\\s-+\\)\\|\\({\\s-*\\)")
 
 (defvar ruby-electric-matching-delimeter-alist
   '((?\[ . ?\])
