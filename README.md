@@ -21,7 +21,7 @@ Usage
 Credits
 -------
 
-This work was inspired by a code snippet posted by Frederick Ros.
+This work was inspired by a code snippet posted by [Frederick Ros](https://github.com/sleeper).
 
 License
 -------
