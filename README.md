@@ -1,3 +1,8 @@
+This repository is not maintained any more
+------------------------------------------
+
+MELPA package points to an original Ruby SVN repository instead - the source of `ruby-electric` mode lies in Ruby repositories.
+
 Ruby Electric
 =============
 
